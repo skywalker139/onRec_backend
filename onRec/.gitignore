@@ -1,0 +1,5 @@
+__pycache__
+db.sqlite3
+.env
+*.ps1
+myenv
