@@ -1,17 +1,27 @@
 from django.db import models
 
-# Create your models here.
-class Guest(models.Model):
-    guest_name=models.CharField(primary_key=True, max_length=50)
-    guest_description=models.TextField()
 
-class Podcast_post(models.Model):
+choices=(('Startup Podcast','Startup Podcast'),('Entrepreneurial Echoes by onRec','Entrepreneurial Echoes by onRec'), 
+         ('Class of 2020s','Class of 2020s'),('Career podcast','Career podcast'))
+
+# Models
+class Guest(models.Model):
+    name=models.CharField(primary_key=True, max_length=50)
+    description=models.TextField()
+    
+    def __str__(self):
+        return self.name
+
+class Podcast(models.Model):
     id=models.AutoField(primary_key=True)
-    podcast_series=models.CharField(max_length=20)
-    podcast_title=models.CharField(max_length=50)
-    date_uploaded=models.DateField(auto_now=False, auto_now_add=False)
-    guest=models.ForeignKey(Guest)
+    series=models.CharField(max_length=50, choices=choices)
+    title=models.CharField(max_length=50)
+    date=models.DateField(auto_now=False, auto_now_add=False)
+    nname=models.ForeignKey(Guest, on_delete=models.CASCADE)
     description=models.TextField()
     spotify_link=models.URLField()
     youtube_link=models.URLField()
-    thumbnail=models.ImageField()
+    #thumbnail=models.ImageField(upload_to='')
+
+    def __str__(self):
+        return self.title
