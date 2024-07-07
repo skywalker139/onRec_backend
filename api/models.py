@@ -17,7 +17,7 @@ class Podcast(models.Model):
     series=models.CharField(max_length=50, choices=choices)
     title=models.CharField(max_length=50)
     date=models.DateField(auto_now=False, auto_now_add=False)
-    nname=models.ForeignKey(Guest, on_delete=models.CASCADE)
+    name=models.ForeignKey(Guest, on_delete=models.CASCADE)
     description=models.TextField()
     spotify_link=models.URLField()
     youtube_link=models.URLField()
