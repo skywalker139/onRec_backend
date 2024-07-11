@@ -21,7 +21,8 @@ class Podcast(models.Model):
     description=models.TextField()
     spotify_link=models.URLField()
     youtube_link=models.URLField()
-    #thumbnail=models.ImageField(upload_to='')
+    thumbnail=models.ImageField(default='onrec logo.jpg' ,upload_to='static/api')
 
     def __str__(self):
         return self.title
+        
