@@ -4,3 +4,4 @@ db.sqlite3
 *.ps1
 myenv
 api/__pycache__
+onrec_frontend

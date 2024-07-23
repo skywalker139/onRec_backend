@@ -8,7 +8,9 @@ choices=(('Startup Podcast','Startup Podcast'),('Entrepreneurial Echoes by onRec
 class Guest(models.Model):
     name=models.CharField(primary_key=True, max_length=50)
     description=models.TextField()
-    
+    designation=models.TextField(max_length=20)
+    image=models.ImageField()
+
     def __str__(self):
         return self.name
 
