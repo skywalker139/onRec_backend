@@ -8,8 +8,8 @@ router.register(r'podcasts', PodcastViewSet)
 router.register(r'guests', GuestViewSet)
 
 urlpatterns = [
-    path('', views.home, name='onrec-home'),
+    path('', views.home, name="home"),
     path('api/', include(router.urls)),
     path('about/', views.about, name='onrec-about'),
-    path('api/home/', home, name="home")
+    path('explore/<str:series>/', views.explore, name='explore_series')
 ]

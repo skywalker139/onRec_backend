@@ -14,23 +14,27 @@ class GuestViewSet(viewsets.ModelViewSet):
     queryset=Guest.objects.all()
     serializer_class=GuestSerializer
 
-# @api_view(['GET'])
-# def latest_podcasts(request):
-#     podcasts = Podcast.objects.order_by('-date')[:5]  # Get latest 5 podcasts
-#     serializer = PodcastSerializer(podcasts, many=True)  # Serialize data
-#     return Response(serializer.data)
-
     
 @api_view(['GET'])
 def home(request):
-    podcasts = Podcast.objects.order_by('-date')[:5]
-    # podcast_list = list(podcasts.values())
-    serializer = PodcastSerializer(podcasts, many=True, context={'request': request})
+    podcasts = Podcast.objects.order_by('-release_date')[:5]
+    serializer1 = PodcastSerializer(podcasts, many=True, context={'request': request})
+    
+    guests = Guest.objects.order_by('-created_at')[:3]
+    serializer2 = GuestSerializer(guests, many=True, context={'request': request})
+    
     data = {
-        "top3tilesdata":serializer.data
+        "recent5podcasts":serializer1.data,
+        "recent3guests":serializer2.data
     }
+
     return Response(data, status=status.HTTP_200_OK)
 
+@api_view(['GET'])
+def explore(request, series_name):
+    podcasts = Podcast.objects.filter(series=series_name)
+    serializer = PodcastSerializer(podcasts, many=True)
+    return Response(serializer.data)
 
 def about(request):
     return HttpResponse('<h1>About Page</h1>')

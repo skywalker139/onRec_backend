@@ -2,14 +2,21 @@ from rest_framework import serializers
 from api.models import Podcast, Guest
 
 #serializer 
-class PodcastSerializer(serializers.HyperlinkedModelSerializer):
-    podcast_id=serializers.ReadOnlyField()
-    class Meta:
-        model=Podcast
-        fields="__all__"
-
-class GuestSerializer(serializers.HyperlinkedModelSerializer):
-    id=serializers.ReadOnlyField()
+class GuestSerializer(serializers.ModelSerializer):
     class Meta:
         model=Guest
         fields="__all__"
+
+class PodcastSerializer(serializers.ModelSerializer):
+    guest_name = serializers.CharField(source='guest.name', read_only=True)
+
+    class Meta:
+        model = Podcast
+        fields = ['id', 'series', 'title', 'release_date', 'guest_name', 'description', 'spotify_link', 'youtube_link', 'thumbnail']
+
+# class PodcastSerializer(serializers.ModelSerializer):
+#     podcast_id=serializers.ReadOnlyField()
+#     guest_name=GuestSerializer()
+#     class Meta:
+#         model=Podcast
+#         fields="__all__"

@@ -1,4 +1,6 @@
 from django.db import models
+from django.utils import timezone
+
 
 
 choices=(('Startup Podcast','Startup Podcast'),('Entrepreneurial Echoes by onRec','Entrepreneurial Echoes by onRec'), 
@@ -6,10 +8,12 @@ choices=(('Startup Podcast','Startup Podcast'),('Entrepreneurial Echoes by onRec
 
 # Models
 class Guest(models.Model):
-    name=models.CharField(primary_key=True, max_length=50)
+    id=models.AutoField(primary_key=True)
+    name=models.CharField(max_length=50)
     description=models.TextField()
-    designation=models.TextField(max_length=20)
+    designation=models.TextField()
     image=models.ImageField()
+    created_at = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
         return self.name
@@ -18,8 +22,8 @@ class Podcast(models.Model):
     id=models.AutoField(primary_key=True)
     series=models.CharField(max_length=50, choices=choices)
     title=models.CharField(max_length=50)
-    date=models.DateField(auto_now=False, auto_now_add=False)
-    name=models.ForeignKey(Guest, on_delete=models.CASCADE)
+    release_date=models.DateField(default=timezone.now)
+    guest=models.ForeignKey(Guest, on_delete=models.CASCADE)
     description=models.TextField()
     spotify_link=models.URLField()
     youtube_link=models.URLField()
