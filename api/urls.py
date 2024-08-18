@@ -11,5 +11,4 @@ urlpatterns = [
     path('podcasts/all', views.home, name="home"),
     path('explore/<str:series>/', views.explore, name='explore'),
     path('podcast/<int:podcast_id>/', views.podcast, name='get_podcast_by_id')
-    #path('api/', include(router.urls)),
 ]

@@ -13,10 +13,3 @@ class PodcastSerializer(serializers.ModelSerializer):
     class Meta:
         model = Podcast
         fields = ['id', 'series', 'title', 'release_date', 'guest_name', 'description', 'spotify_link', 'youtube_link', 'thumbnail']
-
-# class PodcastSerializer(serializers.ModelSerializer):
-#     podcast_id=serializers.ReadOnlyField()
-#     guest_name=GuestSerializer()
-#     class Meta:
-#         model=Podcast
-#         fields="__all__"
