@@ -3,8 +3,8 @@ from django.utils import timezone
 
 
 
-choices=(('Startup Podcast','Startup Podcast'),('Entrepreneurial Echoes by onRec','Entrepreneurial Echoes by onRec'), 
-         ('Class of 2020s','Class of 2020s'),('Career podcast','Career podcast'))
+choices=(('startup','startup'),('Entrepreneurial','Entrepreneurial'), 
+         ('Classof','Classof'),('career','career'),('offbeat','offbeat'),('wellness','wellness'))
 
 # Models
 class Guest(models.Model):

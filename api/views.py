@@ -31,10 +31,28 @@ def home(request):
     return Response(data, status=status.HTTP_200_OK)
 
 @api_view(['GET'])
-def explore(request, series_name):
-    podcasts = Podcast.objects.filter(series=series_name)
-    serializer = PodcastSerializer(podcasts, many=True)
-    return Response(serializer.data)
+def explore(request, series):
+    podcasts = Podcast.objects.filter(series=series)
+    serializer3 = PodcastSerializer(podcasts, many=True, context={'request': request})
+    return Response(serializer3.data, status=status.HTTP_200_OK)
+    
+@api_view(['GET'])
+def podcast(request, podcast_id):
+    try:
+        podcast = Podcast.objects.get(id=podcast_id)
+        guest=podcast.guest
+        serializer1 = PodcastSerializer(podcast, context={'request': request})
+        serializer2 = GuestSerializer(guest, context={'request': request})
 
-def about(request):
-    return HttpResponse('<h1>About Page</h1>')
+        data = {
+        "podcast":serializer1.data,
+        "associatedguest":serializer2.data
+        }
+
+        return Response(data, status=status.HTTP_200_OK)
+    except Podcast.DoesNotExist:
+        return Response({"error": "Podcast not found"}, status=status.HTTP_404_NOT_FOUND)
+
+
+# def about(request):
+#     return HttpResponse('<h1>About Page</h1>')
