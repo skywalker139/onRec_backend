@@ -1,0 +1,5 @@
+django
+django-import-export
+django-cors-headers
+djangorestframework
+pillow 

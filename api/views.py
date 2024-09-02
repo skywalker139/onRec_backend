@@ -3,8 +3,8 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from django.http import HttpResponse
 from rest_framework import viewsets, status
-from api.models import Podcast, Guest
-from api.serializers import PodcastSerializer, GuestSerializer
+from api.models import Podcast, Guest, Blog
+from api.serializers import PodcastSerializer, GuestSerializer, BlogSerializer
 
 class PodcastViewSet(viewsets.ModelViewSet):
     queryset=Podcast.objects.all()
@@ -32,10 +32,14 @@ def home(request):
 
 @api_view(['GET'])
 def explore(request, series):
-    podcasts = Podcast.objects.filter(series=series)
+    if series == 'all':
+        podcasts = Podcast.objects.all()
+    else:
+        podcasts = Podcast.objects.filter(series=series)
+
     serializer3 = PodcastSerializer(podcasts, many=True, context={'request': request})
     return Response(serializer3.data, status=status.HTTP_200_OK)
-    
+
 @api_view(['GET'])
 def podcast(request, podcast_id):
     try:
@@ -44,15 +48,15 @@ def podcast(request, podcast_id):
         serializer1 = PodcastSerializer(podcast, context={'request': request})
         serializer2 = GuestSerializer(guest, context={'request': request})
 
+        blog = Blog.objects.filter(podcast=podcast).first()
+        blog_data = BlogSerializer(blog, context={'request': request})
+
         data = {
         "podcast":serializer1.data,
-        "associatedguest":serializer2.data
+        "associatedguest":serializer2.data,
+        "blog": blog_data.data
         }
 
         return Response(data, status=status.HTTP_200_OK)
     except Podcast.DoesNotExist:
         return Response({"error": "Podcast not found"}, status=status.HTTP_404_NOT_FOUND)
-
-
-# def about(request):
-#     return HttpResponse('<h1>About Page</h1>')

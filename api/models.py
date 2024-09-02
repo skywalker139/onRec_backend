@@ -32,3 +32,13 @@ class Podcast(models.Model):
     def __str__(self):
         return self.title
         
+class Blog(models.Model):
+    id=models.AutoField(primary_key=True)
+    title=models.CharField(max_length=100)
+    content=models.TextField()
+    release_date=models.DateField(default=timezone.now)
+    podcast = models.ForeignKey(Podcast, on_delete=models.CASCADE, related_name='blogs')
+    medium_link=models.URLField()
+
+    def __str__(self):
+        return self.title
