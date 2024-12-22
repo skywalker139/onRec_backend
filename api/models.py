@@ -14,6 +14,7 @@ class Guest(models.Model):
     designation=models.TextField()
     image=models.ImageField()
     created_at = models.DateTimeField(default=timezone.now)
+    social_link = models.URLField(default='https://www.instagram.com/iitr_onrec/')
 
     def __str__(self):
         return self.name
@@ -21,13 +22,14 @@ class Guest(models.Model):
 class Podcast(models.Model):
     id=models.AutoField(primary_key=True)
     series=models.CharField(max_length=50, choices=choices)
-    title=models.CharField(max_length=50)
+    title=models.CharField(max_length=100)
     release_date=models.DateField(default=timezone.now)
     guest=models.ForeignKey(Guest, on_delete=models.CASCADE)
     description=models.TextField()
     spotify_link=models.URLField()
     youtube_link=models.URLField()
     thumbnail=models.ImageField(default='onrec logo.jpg' ,upload_to='static/api')
+    poster=models.ImageField(default='onrec logo.jpg' ,upload_to='static/api')
 
     def __str__(self):
         return self.title
