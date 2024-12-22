@@ -16,4 +16,4 @@ class PodcastSerializer(serializers.ModelSerializer):
     blogs = BlogSerializer(many=True, read_only=True)
     class Meta:
         model = Podcast
-        fields = ['id', 'series', 'title', 'release_date', 'guest_name', 'description', 'spotify_link', 'youtube_link', 'thumbnail','blogs']
+        fields = ['id', 'series', 'title', 'release_date', 'guest_name', 'description', 'spotify_link', 'youtube_link', 'thumbnail','poster','blogs']
