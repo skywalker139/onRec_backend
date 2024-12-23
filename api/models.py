@@ -6,6 +6,15 @@ from django.utils import timezone
 choices=(('startup','startup'),('Entrepreneurial','Entrepreneurial'), 
          ('Classof','Classof'),('career','career'),('offbeat','offbeat'),('wellness','wellness'))
 
+
+def validate_json_content(value):
+    if not isinstance(value, list):
+        raise ValidationError("Content must be a list of dictionaries.")
+    for item in value:
+        if not isinstance(item, dict) or 'heading' not in item or 'paragraph' not in item:
+            raise ValidationError("Each item in the content list must be a dictionary with 'heading' and 'paragraph' keys.")
+
+
 # Models
 class Guest(models.Model):
     id=models.AutoField(primary_key=True)
@@ -37,7 +46,11 @@ class Podcast(models.Model):
 class Blog(models.Model):
     id=models.AutoField(primary_key=True)
     title=models.CharField(max_length=100)
-    content=models.TextField()
+    content = models.JSONField(
+        default=list,
+        validators=[validate_json_content],
+        help_text="Enter JSON data as a list of dictionaries with 'heading' and 'paragraph' keys."
+    )
     release_date=models.DateField(default=timezone.now)
     podcast = models.ForeignKey(Podcast, on_delete=models.CASCADE, related_name='blogs')
     medium_link=models.URLField()
