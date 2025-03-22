@@ -25,10 +25,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure--yd0+6#x+vm6nsn35xl82t(xm1%%iikq45p9-7^(i(ok!qubxs'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-ALLOWED_HOSTS = ['onrec-backend.onrender.com','onrec.iitr.ac.in']
-
+if config('PRODUCTION', default=False, cast=bool):
+    DEBUG = False
+    ALLOWED_HOSTS = ['onrec-backend.onrender.com','onrec.iitr.ac.in']
+else:
+  DEBUG = True
+  ALLOWED_HOSTS = ['*']
 
 # Application definition
 
@@ -80,16 +82,25 @@ WSGI_APPLICATION = 'onRec.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
-tmpPostgres = urlparse(config("DATABASE_URL"))
+if config('PRODUCTION', default=False, cast=bool):
 
-DATABASES = {
+    tmpPostgres = urlparse(config("DATABASE_URL"))
+
+    DATABASES = {
+            'default': {
+                'ENGINE': 'django.db.backends.postgresql',
+                'NAME': tmpPostgres.path.replace('/', ''),
+                'USER': tmpPostgres.username,
+                'PASSWORD': tmpPostgres.password,
+                'HOST': tmpPostgres.hostname,
+                'PORT': 5432,
+            }
+        }
+else:
+    DATABASES = {
         'default': {
-            'ENGINE': 'django.db.backends.postgresql',
-            'NAME': tmpPostgres.path.replace('/', ''),
-            'USER': tmpPostgres.username,
-            'PASSWORD': tmpPostgres.password,
-            'HOST': tmpPostgres.hostname,
-            'PORT': 5432,
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
         }
     }
 
