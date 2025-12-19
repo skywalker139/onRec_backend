@@ -78,24 +78,34 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'onRec.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
-if config('PRODUCTION', default=False, cast=bool):
+if config('DATABASE_URL', default=None):
+    tmpPostgres = urlparse(config('DATABASE_URL'))
+    DB_NAME = tmpPostgres.path.replace('/', '')
+    DN_USER = tmpPostgres.username
+    DB_PASSWORD = tmpPostgres.password
+    DB_HOST = tmpPostgres.hostname
+    DB_PORT = 5432
+else:
+    DB_NAME = config('POSTGRES_DB')
+    DN_USER = config('POSTGRES_USER')
+    DB_PASSWORD = config('POSTGRES_PASSWORD')
+    DB_HOST = config('POSTGRES_HOST')
+    DB_PORT = config('POSTGRES_PORT')
 
-    tmpPostgres = urlparse(config("DATABASE_URL"))
-
+if config('PRODUCTION', default=False, cast=bool) :
     DATABASES = {
-            'default': {
-                'ENGINE': 'django.db.backends.postgresql',
-                'NAME': tmpPostgres.path.replace('/', ''),
-                'USER': tmpPostgres.username,
-                'PASSWORD': tmpPostgres.password,
-                'HOST': tmpPostgres.hostname,
-                'PORT': 5432,
-            }
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': DB_NAME,
+            'USER': DN_USER,
+            'PASSWORD': DB_PASSWORD,
+            'HOST': DB_HOST,
+            'PORT': DB_PORT,
         }
+    }
 else:
     DATABASES = {
         'default': {
@@ -145,6 +155,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
 STATIC_URL = 'static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 MEDIA_ROOT=os.path.join(BASE_DIR,'media')
 MEDIA_URL='/media/'
 

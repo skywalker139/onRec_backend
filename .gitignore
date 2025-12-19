@@ -3,4 +3,6 @@ db.sqlite3
 .env
 *.ps1
 myenv
+.venv
+*.json
 onrec_frontend

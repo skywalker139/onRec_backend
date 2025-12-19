@@ -1,12 +1,40 @@
 version: "3.8"
-services:
-  app:
-    build: .
-    volumes:
-      - .:/django/onrec
-    ports:
-      - 8000:8000
-    image: application:django
-    container_name: onrec_backend
-    command: gunicorn onRec.wsgi:application --bind 0.0.0.0:8000
 
+services:
+  db:
+    image: postgres:16
+    container_name: onrec_db
+    env_file:
+      - ./.env
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    networks:
+      - onrec-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U onrec_user -d onrec_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build: .
+    image: onrec_backend:latest
+    container_name: onrec_backend
+    env_file:
+      - ./.env
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - onrec-network
+
+volumes:
+  postgres_data:
+
+networks:
+  onrec-network:
+    driver: bridge
